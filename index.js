@@ -7,9 +7,8 @@ const fromMailer = mailObject.fromMailer.mail
 const toMailer = mailObject.toMail.mail
 const fromMailerPassword = mailObject.fromMailer.password
 
-const minutesToRetry = 2400000 // 40 minutes, 30 seconds for
+const minutesToRetry = 2400000 // 40 minutes = 2400000 ms, 30 seconds = 30000 ms
 
-let passwordFile = JSON.parse(fs.readFileSync('./credentials.json'));
 let transporter = mailer.createTransport({
     service: mailObject.fromMailer.service,
     auth: {
@@ -18,8 +17,12 @@ let transporter = mailer.createTransport({
     }
 })
 
+
+
 function fechThePage(webpage, fromMailer, toMailer) {
-    fetch(webpage)
+    try {
+        
+        fetch(webpage)
         .catch(err => {
             console.error(`La página ${webpage} respondio con el error: ${err.code}`)
             transporter.sendMail(mailOptions = {
@@ -36,11 +39,16 @@ function fechThePage(webpage, fromMailer, toMailer) {
             })
         })
 
-        .then(res => function () { if (!err) { res.text() } })
-        .then(body => function () { if (!err) { console.log(body) } })
-        .then(setTimeout(fechThePage,minutesToRetry,'https://www.google.com:81',fromMailer,toMailer))
+        .then(res => {
+            console.log('Res status: ' + res.statusText)
+        })
+        .then(setTimeout(fechThePage, minutesToRetry, 'https://chat.smsmasivos.biz/Admin/Login', fromMailer, toMailer))
+
+    } catch (error) {
+        console.error("TRY CATCH ERROR: "+ error)
+    }
 
 }
 
 
-setTimeout(fechThePage,minutesToRetry,'https://www.google.com:81',fromMailer,toMailer);
+setTimeout(fechThePage, minutesToRetry, 'https://chat.smsmasivos.biz/Admin/Login', fromMailer, toMailer);
