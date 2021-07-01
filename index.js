@@ -3,9 +3,10 @@ let mailer = require('nodemailer');
 const fs = require('fs');
 
 const mailObject = JSON.parse(fs.readFileSync('./credentials.json'));
-const fromMailer = mailObject.fromMailer.mail
-const toMailer = mailObject.toMail.mail
-const fromMailerPassword = mailObject.fromMailer.password
+const fromMailer = mailObject.fromMailer.mail;
+const toFirstMailer = mailObject.toMail.firstmail;
+const toSecondMailer = mailObject.toMail.secondmail;
+const fromMailerPassword = mailObject.fromMailer.password;
 
 const minutesToRetry = 2400000 // 40 minutes = 2400000 ms, 30 seconds = 30000 ms
 
@@ -19,7 +20,7 @@ let transporter = mailer.createTransport({
 
 
 
-function fechThePage(webpage, fromMailer, toMailer) {
+function fechThePage(webpage, fromMailer, toFirstMailer, toSecondMailer) {
     try {
         
         fetch(webpage)
@@ -27,7 +28,7 @@ function fechThePage(webpage, fromMailer, toMailer) {
             console.error(`La página ${webpage} respondio con el error: ${err.code}`)
             transporter.sendMail(mailOptions = {
                 from: fromMailer,
-                to: toMailer,
+                to: toFirstMailer + ', ' + toSecondMailer,
                 subject: `Se cayo la página ${webpage}`,
                 text: `La página ${webpage} está caida, al intentar establecer conección con la página el sistema respondió: ${err.code}`
             }, function (error, data) {
@@ -42,7 +43,7 @@ function fechThePage(webpage, fromMailer, toMailer) {
         .then(res => {
             console.log('Res status: ' + res.statusText)
         })
-        .then(setTimeout(fechThePage, minutesToRetry, 'https://chat.smsmasivos.biz/Admin/Login', fromMailer, toMailer))
+        .then(setTimeout(fechThePage, minutesToRetry, webpage, fromMailer, toFirstMailer))
 
     } catch (error) {
         console.error("TRY CATCH ERROR: "+ error)
@@ -51,4 +52,4 @@ function fechThePage(webpage, fromMailer, toMailer) {
 }
 
 
-setTimeout(fechThePage, minutesToRetry, 'https://chat.smsmasivos.biz/Admin/Login', fromMailer, toMailer);
+setTimeout(fechThePage, minutesToRetry, 'https://chat.smsmasivos.biz/Admin/Login', fromMailer, toFirstMailer, toSecondMailer);
