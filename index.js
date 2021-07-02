@@ -6,6 +6,7 @@ const mailObject = JSON.parse(fs.readFileSync('./credentials.json'));
 const fromMailer = mailObject.fromMailer.mail;
 const toFirstMailer = mailObject.toMail.firstmail;
 const toSecondMailer = mailObject.toMail.secondmail;
+const toThirdMailer = mailObject.toMail.thirdmail;
 const fromMailerPassword = mailObject.fromMailer.password;
 
 const minutesToRetry = 2400000 // 40 minutes = 2400000 ms, 30 seconds = 30000 ms
@@ -20,7 +21,7 @@ let transporter = mailer.createTransport({
 
 
 
-function fechThePage(webpage, fromMailer, toFirstMailer, toSecondMailer) {
+function fechThePage(webpage, fromMailer, toFirstMailer, toSecondMailer, toThirdMailer) {
     try {
         
         fetch(webpage)
@@ -28,7 +29,7 @@ function fechThePage(webpage, fromMailer, toFirstMailer, toSecondMailer) {
             console.error(`La página ${webpage} respondio con el error: ${err.code}`)
             transporter.sendMail(mailOptions = {
                 from: fromMailer,
-                to: toFirstMailer + ', ' + toSecondMailer,
+                to: toFirstMailer + ', ' + toSecondMailer + ', ' + toThirdMailer,
                 subject: `Se cayo la página ${webpage}`,
                 text: `La página ${webpage} está caida, al intentar establecer conección con la página el sistema respondió: ${err.code}`
             }, function (error, data) {
@@ -52,4 +53,6 @@ function fechThePage(webpage, fromMailer, toFirstMailer, toSecondMailer) {
 }
 
 
-setTimeout(fechThePage, minutesToRetry, 'https://chat.smsmasivos.biz/Admin/Login', fromMailer, toFirstMailer, toSecondMailer);
+setTimeout(fechThePage, minutesToRetry, 'https://chat.smsmasivos.biz/Admin/Login', fromMailer, toFirstMailer, toSecondMailer, toThirdMailer);
+setTimeout(fechThePage, minutesToRetry, 'http://run0km.com/', fromMailer, toFirstMailer, toSecondMailer, toThirdMailer);
+setTimeout(fechThePage, minutesToRetry, 'https://delivery.run0km.com/', fromMailer, toFirstMailer, toSecondMailer, toThirdMailer);
