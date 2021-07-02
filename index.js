@@ -42,7 +42,7 @@ function fechThePage(webpage, fromMailer, toFirstMailer, toSecondMailer, toThird
         })
 
         .then(res => {
-            console.log('Res status: ' + res.statusText)
+            console.log(`Res status for website: ${webpage} is ${res.statusText}`)
         })
         .then(setTimeout(fechThePage, minutesToRetry, webpage, fromMailer, toFirstMailer))
 
@@ -53,6 +53,6 @@ function fechThePage(webpage, fromMailer, toFirstMailer, toSecondMailer, toThird
 }
 
 
-setTimeout(fechThePage, minutesToRetry, 'https://chat.smsmasivos.biz/Admin/Login', fromMailer, toFirstMailer, toSecondMailer, toThirdMailer);
-setTimeout(fechThePage, minutesToRetry, 'http://run0km.com/', fromMailer, toFirstMailer, toSecondMailer, toThirdMailer);
-setTimeout(fechThePage, minutesToRetry, 'https://delivery.run0km.com/', fromMailer, toFirstMailer, toSecondMailer, toThirdMailer);
+fechThePage('https://chat.smsmasivos.biz/Admin/Login',fromMailer, toFirstMailer, toSecondMailer, toThirdMailer); 
+fechThePage('http://run0km.com/',fromMailer, toFirstMailer, toSecondMailer, toThirdMailer);
+fechThePage('https://delivery.run0km.com/', fromMailer, toFirstMailer, toSecondMailer, toThirdMailer)
